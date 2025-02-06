@@ -1,0 +1,123 @@
+#include "LEDPWM.h"
+
+/// @brief Creates a LEDPWM object
+/// @param Pin The pin to use
+/// @param ledcChannel The LEDC channel to use
+/// @param configFile The name of the configuration to use
+LEDPWM::LEDPWM(int Pin, int ledcChannel, String configFile) {
+	LEDPWM_config.Pin = Pin;
+	LEDPWM_config.ledc_channel = ledcChannel;
+	config_path =  "/settings/act/" + configFile;
+}
+
+/// @brief Starts the LEDPWM object
+/// @return True on success
+bool LEDPWM::begin() {
+	// Set description
+	Description.actionQuantity = 2;
+	Description.type = "output";
+	Description.name = "LED PWM Controller";
+	Description.actions = {{"state", 0}, {"dutycycle", 1}};
+	// Create settings directory if necessary
+	if (!checkConfig(config_path)) {
+		// Set defaults
+		return saveConfig(config_path, getConfig());
+	} else {
+		// Load settings
+		return setConfig(Storage::readFile(config_path), false);
+	}
+}
+
+/// @brief Receives an action
+/// @param action The action to process (only option is 0 for set output)
+/// @param payload A 0 or 1 to set the pin low or high
+/// @return JSON response with OK
+std::tuple<bool, String> LEDPWM::receiveAction(int action, String payload) {
+	if (action == 0) {
+		if (payload == "0") {
+			SetDutyCycle(0);
+		} else if (payload == "1") {
+			SetDutyCycle(LEDPWM_config.dutyCycle);
+		} else {
+			return { true, R"({"Response": "Invalid payload"})" };
+		}
+		return { true, R"({"Response": "OK"})" };
+	} else if (action == 1) {
+		int duty = payload.toInt();
+		LEDPWM_config.dutyCycle = duty;
+		saveConfig(config_path, getConfig());
+		SetDutyCycle(LEDPWM_config.dutyCycle);		
+		return { true, R"({"Response": "OK"})" };
+	}
+	return { true, R"({"Response": "Invalid action"})" };
+}
+
+/// @brief Gets the current config
+/// @return A JSON string of the config
+String LEDPWM::getConfig() {
+	// Allocate the JSON document
+	JsonDocument doc;
+	// Assign current values
+	doc["Pin"] = LEDPWM_config.Pin;
+	doc["dutyCycle"] = LEDPWM_config.dutyCycle;
+	doc["ledc_channel"] = LEDPWM_config.ledc_channel;
+	doc["ledc_resolution"] = LEDPWM_config.ledc_resolution;
+	doc["ledc_frequency"] = LEDPWM_config.ledc_frequency;
+
+	// Create string to hold output
+	String output;
+	// Serialize to string
+	serializeJson(doc, output);
+	return output;
+}
+
+/// @brief Sets the configuration for this device
+/// @param config A JSON string of the configuration settings
+/// @param save If the configuration should be saved to a file
+/// @return True on success
+bool LEDPWM::setConfig(String config, bool save) {
+	// Detach pin in case it changes
+	ledcDetachPin(LEDPWM_config.Pin);
+	// Allocate the JSON document
+  	JsonDocument doc;
+	// Deserialize file contents
+	DeserializationError error = deserializeJson(doc, config);
+	// Test if parsing succeeds.
+	if (error) {
+		Logger.print(F("Deserialization failed: "));
+		Logger.println(error.f_str());
+		return false;
+	}
+	// Assign loaded values
+	LEDPWM_config.Pin = doc["Pin"].as<int>();
+	LEDPWM_config.dutyCycle = doc["dutyCycle"].as<uint32_t>();
+	LEDPWM_config.ledc_channel = doc["ledc_channel"].as<uint8_t>();
+	LEDPWM_config.ledc_resolution = doc["ledc_resolution"].as<int>();
+	LEDPWM_config.ledc_frequency = doc["ledc_frequency"].as<int>();
+
+	if (save) {
+		if (!saveConfig(config_path, config)) {
+			return false;
+		}
+	}
+	return configureOutput();
+}
+
+/// @brief Configures LEDC output
+/// @return True on success
+bool LEDPWM::configureOutput() {
+	if (ledcSetup(LEDPWM_config.ledc_channel, LEDPWM_config.ledc_frequency, LEDPWM_config.ledc_resolution) != 0) {
+		// Attach pin to LEDC channel
+		ledcAttachPin(LEDPWM_config.Pin, LEDPWM_config.ledc_channel);
+		return true;
+	}
+	return false;
+}
+
+/// @brief Sets the duty cycle on the LEDC channel
+/// @param cycle The duty cycle to set
+/// @return True on success
+bool LEDPWM::SetDutyCycle(uint32_t cycle) {
+	ledcWrite(LEDPWM_config.ledc_channel, cycle);
+	return true;
+}
