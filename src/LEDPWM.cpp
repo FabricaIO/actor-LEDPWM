@@ -29,9 +29,9 @@ bool LEDPWM::begin() {
 }
 
 /// @brief Receives an action
-/// @param action The action to process (only option is 0 for set output)
-/// @param payload A 0 or 1 to set the pin low or high
-/// @return JSON response with OK
+/// @param action The action to process (0 for set state, 1 for set duty cycle)
+/// @param payload A 0 or 1 to turn LED off or on, or a duty cycle value
+/// @return JSON response with OK or error message
 std::tuple<bool, String> LEDPWM::receiveAction(int action, String payload) {
 	if (action == 0) {
 		if (payload == "0") {
