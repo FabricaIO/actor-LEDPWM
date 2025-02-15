@@ -1,0 +1,56 @@
+{
+	"name": "Fabrica-IO Actor PWM LED",
+	"version": "0.5.0",
+	"description": "Controls LEDs with the LEDC interface via PWM",
+	"keywords": "Fabrica-IO, actor, led, output",
+	"repository":
+	{
+	  "type": "git",
+	  "url": "https://github.com/FabricaIO/actor-LEDPWM.git"
+	},
+	"authors":
+	[
+	  {
+		"name": "Sam Groveman",
+		"email": "SamGroveman@outlook.com",
+		"url": "https://github.com/FabricaIO"
+	  }
+	],
+	"dependencies": {
+	  },
+	"license": "GPLv3",
+	"homepage": "https://github.com/FabricaIO",
+	"frameworks": "arduino",
+	"platforms": "*",
+	"fabrica-io" : {
+		"name": "LEDControl",
+		"type": 1,
+		"category": "light",
+		"libname": "LEDPWM",
+		"includes": ["LEDPWM"],
+		"description": "Controls LEDs with the LEDC interface via PWM",
+		"constructor": 
+		[
+			[
+				{
+					"name": "Pin",
+					"type": "int",
+					"description": "The pin to use",
+					"default": ""
+				},
+				{
+					"name": "ledcChannel",
+					"type": "int",
+					"description": "The LEDc channel to use",
+					"default": "0"
+				},
+				{
+					"name": "Configfile",
+					"type": "String",
+					"description": "The file name to store settings in",
+					"default": "GenericOutput.json"
+				}
+			]
+		]
+	}
+  }
