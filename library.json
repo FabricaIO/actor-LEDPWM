@@ -1,5 +1,5 @@
 {
-	"name": "Fabrica-IO Actor PWM LED",
+	"name": "actor-LEDPWM",
 	"version": "0.5.0",
 	"description": "Controls LEDs with the LEDC interface via PWM",
 	"keywords": "Fabrica-IO, actor, led, output",
