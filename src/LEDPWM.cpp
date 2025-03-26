@@ -58,6 +58,7 @@ String LEDPWM::getConfig() {
 	// Allocate the JSON document
 	JsonDocument doc;
 	// Assign current values
+	doc["Name"] = Description.name;
 	doc["Pin"] = LEDPWM_config.Pin;
 	doc["dutyCycle"] = LEDPWM_config.dutyCycle;
 	doc["ledc_channel"] = LEDPWM_config.ledc_channel;
@@ -89,6 +90,7 @@ bool LEDPWM::setConfig(String config, bool save) {
 		return false;
 	}
 	// Assign loaded values
+	Description.name = doc["Name"].as<String>();
 	LEDPWM_config.Pin = doc["Pin"].as<int>();
 	LEDPWM_config.dutyCycle = doc["dutyCycle"].as<uint32_t>();
 	LEDPWM_config.ledc_channel = doc["ledc_channel"].as<uint8_t>();
