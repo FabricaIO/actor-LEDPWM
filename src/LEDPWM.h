@@ -28,7 +28,7 @@ class LEDPWM : public Actor {
 			int ledc_frequency = 8000;
 		} LEDPWM_config;
 
-		LEDPWM(int Pin, int ledcChannel = 0, String configFile = "LEDPWM.json");
+		LEDPWM(String Name, int Pin, int ledcChannel = 0, String configFile = "LEDPWM.json");
 		bool begin();
 		std::tuple<bool, String> receiveAction(int action, String payload);
 		String getConfig();

@@ -1,10 +1,11 @@
 #include "LEDPWM.h"
 
 /// @brief Creates a LEDPWM object
+/// @param Name The device name
 /// @param Pin The pin to use
 /// @param ledcChannel The LEDC channel to use
 /// @param configFile The name of the configuration to use
-LEDPWM::LEDPWM(int Pin, int ledcChannel, String configFile) {
+LEDPWM::LEDPWM(String Name, int Pin, int ledcChannel, String configFile) : Actor(Name) {
 	LEDPWM_config.Pin = Pin;
 	LEDPWM_config.ledc_channel = ledcChannel;
 	config_path =  "/settings/act/" + configFile;
@@ -16,7 +17,6 @@ bool LEDPWM::begin() {
 	// Set description
 	Description.actionQuantity = 2;
 	Description.type = "output";
-	Description.name = "LED PWM Controller";
 	Description.actions = {{"state", 0}, {"dutycycle", 1}};
 	// Create settings directory if necessary
 	if (!checkConfig(config_path)) {
