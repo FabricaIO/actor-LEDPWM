@@ -39,7 +39,7 @@ std::tuple<bool, String> LEDPWM::receiveAction(int action, String payload) {
 		} else if (payload == "1") {
 			SetDutyCycle(LEDPWM_config.dutyCycle);
 		} else {
-			return { true, R"({"Response": "Invalid payload"})" };
+			return { true, R"({"success": false, "Response": "Invalid payload"})" };
 		}
 		return { true, R"({"Response": "OK"})" };
 	} else if (action == 1) {
@@ -47,9 +47,9 @@ std::tuple<bool, String> LEDPWM::receiveAction(int action, String payload) {
 		LEDPWM_config.dutyCycle = duty;
 		saveConfig(config_path, getConfig());
 		SetDutyCycle(LEDPWM_config.dutyCycle);		
-		return { true, R"({"Response": "OK"})" };
+		return { true, R"({"success": true})" };
 	}
-	return { true, R"({"Response": "Invalid action"})" };
+	return { true, R"({"success": false, "Response": "Invalid action"})" };
 }
 
 /// @brief Gets the current config
