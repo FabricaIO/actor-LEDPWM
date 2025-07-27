@@ -19,7 +19,7 @@ bool LEDPWM::begin() {
 	Description.type = "output";
 	Description.actions = {{"state", 0}, {"dutycycle", 1}};
 	// Create settings directory if necessary
-	bool result - false;
+	bool result = false;
 	if (!checkConfig(config_path)) {
 		// Set defaults
 		result = saveConfig(config_path, getConfig());
