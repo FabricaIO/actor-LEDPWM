@@ -26,6 +26,8 @@ bool LEDPWM::begin() {
 		// Load settings
 		return setConfig(Storage::readFile(config_path), false);
 	}
+	// Set initial duty cycle
+	SetDutyCycle(LEDPWM_config.dutyCycle);
 }
 
 /// @brief Receives an action
