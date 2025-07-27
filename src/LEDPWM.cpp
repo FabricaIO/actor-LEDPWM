@@ -19,15 +19,19 @@ bool LEDPWM::begin() {
 	Description.type = "output";
 	Description.actions = {{"state", 0}, {"dutycycle", 1}};
 	// Create settings directory if necessary
+	bool result - false;
 	if (!checkConfig(config_path)) {
 		// Set defaults
-		return saveConfig(config_path, getConfig());
+		result = saveConfig(config_path, getConfig());
 	} else {
 		// Load settings
-		return setConfig(Storage::readFile(config_path), false);
+		result = setConfig(Storage::readFile(config_path), false);
 	}
 	// Set initial duty cycle
-	SetDutyCycle(LEDPWM_config.dutyCycle);
+	if (result) {
+		SetDutyCycle(LEDPWM_config.dutyCycle);
+	}
+	return result;
 }
 
 /// @brief Receives an action
