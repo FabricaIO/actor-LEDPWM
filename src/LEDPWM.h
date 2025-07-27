@@ -15,6 +15,9 @@ class LEDPWM : public Actor {
 			/// @brief Pin of channel
 			int Pin;
 
+			/// @brief If the duty cycle should be saved to the configuration file when updated
+			bool saveDutyCycle = false;
+
 			/// @brief Duty cycle of the LED strand
 			uint32_t dutyCycle = 127;
 

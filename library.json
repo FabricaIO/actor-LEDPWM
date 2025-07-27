@@ -2,7 +2,7 @@
 	"name": "actor-LEDPWM",
 	"version": "0.5.0",
 	"description": "Controls LEDs with the LEDC interface via PWM",
-	"keywords": "Fabrica-IO, actor, led, output",
+	"keywords": "Fabrica-IO, actor, led, pwm, output",
 	"repository":
 	{
 	  "type": "git",
@@ -23,12 +23,12 @@
 	"frameworks": "arduino",
 	"platforms": "*",
 	"fabricaio" : {
-		"name": "LEDControl",
+		"name": "LEDPWMControl",
 		"type": 1,
 		"category": "light",
 		"libname": "LEDPWM",
 		"includes": ["LEDPWM"],
-		"description": "Controls LEDs with the LEDC interface via PWM",
+		"description": "Controls LEDs or other devices with the LEDC interface via PWM",
 		"constructor": 
 		[
 			[
