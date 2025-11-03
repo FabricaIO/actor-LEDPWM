@@ -15,7 +15,6 @@ LEDPWM::LEDPWM(String Name, int Pin, int ledcChannel, String configFile) : Actor
 /// @return True on success
 bool LEDPWM::begin() {
 	// Set description
-	Description.actionQuantity = 2;
 	Description.type = "output";
 	Description.actions = {{"state", 0}, {"dutycycle", 1}};
 	// Create settings directory if necessary
