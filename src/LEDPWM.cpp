@@ -53,10 +53,6 @@ std::tuple<bool, String> LEDPWM::receiveAction(int action, String payload) {
 			return { true, R"({"success": false, "Response": "Duty cycle out of range"})" };
 		}
 		LEDPWM_config.dutyCycle = duty;
-		if (LEDPWM_config.saveDutyCycle) {
-			// Save duty cycle to config
-			saveConfig(config_path, getConfig());
-		}
 		SetDutyCycle(LEDPWM_config.dutyCycle);		
 		return { true, R"({"success": true})" };
 	}
@@ -71,7 +67,6 @@ String LEDPWM::getConfig() {
 	// Assign current values
 	doc["Name"] = Description.name;
 	doc["Pin"] = LEDPWM_config.Pin;
-	doc["saveDutyCycle"] = LEDPWM_config.saveDutyCycle;
 	doc["dutyCycle"] = LEDPWM_config.dutyCycle;
 	doc["ledc_channel"] = LEDPWM_config.ledc_channel;
 	doc["ledc_resolution"] = LEDPWM_config.ledc_resolution;
@@ -104,7 +99,6 @@ bool LEDPWM::setConfig(String config, bool save) {
 	// Assign loaded values
 	Description.name = doc["Name"].as<String>();
 	LEDPWM_config.Pin = doc["Pin"].as<int>();
-	LEDPWM_config.saveDutyCycle = doc["saveDutyCycle"].as<bool>();
 	LEDPWM_config.dutyCycle = doc["dutyCycle"].as<uint32_t>();
 	LEDPWM_config.ledc_channel = doc["ledc_channel"].as<uint8_t>();
 	LEDPWM_config.ledc_resolution = doc["ledc_resolution"].as<int>();
